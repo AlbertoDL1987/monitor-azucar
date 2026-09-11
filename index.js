@@ -78,9 +78,14 @@ app.get('/glucosa', async (req, res) => {
     const bodyTexto = await resp.text();
 
     if (bodyTexto.trim().startsWith('<')) {
-      return res.status(502).json({ error: 'Dexcom envio respuesta no valida' });
+      console.log('--- RESPUESTA RECIBIDA DE DEXCOM ---');
+      console.log(bodyTexto.substring(0, 300));
+      return res.status(502).json({ 
+        error: 'Dexcom envio HTML',
+        detalle: bodyTexto.substring(0, 200)
+      });
     }
-
+    
     const lecturas = JSON.parse(bodyTexto);
 
     if (Array.isArray(lecturas) && lecturas.length > 0) {
